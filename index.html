@@ -163,6 +163,22 @@ body {
 }
 .card:hover { box-shadow: 0 4px 20px rgba(122,79,170,.1); transform: translateY(-2px); }
 
+.card.best {
+  border: 2px solid var(--purple);
+  box-shadow: 0 0 0 3px rgba(122,79,170,.1);
+}
+.best-badge {
+  display: inline-block;
+  background: var(--purple);
+  color: #fff;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  margin-bottom: 6px;
+}
+
 .card-thumb {
   width: 100%; aspect-ratio: 1;
   object-fit: cover;
@@ -219,6 +235,22 @@ body {
   transition: all .15s;
 }
 .booth-link:hover { background: var(--purple); color: var(--white); border-color: var(--purple); }
+
+/* Share button */
+.share-wrap { text-align: center; margin-top: 32px; }
+.btn-share {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 32px;
+  border: 1px solid #1d9bf0;
+  background: #1d9bf0;
+  color: #fff;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px; letter-spacing: .16em;
+  cursor: pointer; text-decoration: none;
+  transition: background .2s, border-color .2s;
+}
+.btn-share:hover { background: #0d8ae0; border-color: #0d8ae0; }
+.btn-share svg { flex-shrink: 0; }
 
 /* Admin link */
 .admin-link-wrap {
@@ -549,6 +581,12 @@ body {
     <div class="no-result" id="no-result" style="display:none">
       条件に合う曲が見つかりませんでした。<br>タグを変えて試してみてください。
     </div>
+    <div class="share-wrap" id="share-wrap" style="display:none">
+      <a class="btn-share" id="share-btn" href="#" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.261 5.638 5.903-5.638zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Xでシェアする
+      </a>
+    </div>
   </div>
 
   <div class="admin-link-wrap">
@@ -735,12 +773,13 @@ function diagnose() {
     noRes.textContent = '条件に合う曲が見つかりませんでした。タグを変えて試してみてください。';
   } else {
     noRes.style.display = 'none';
-    cardsWrap.innerHTML = scored.map(s => `
-      <div class="card">
+    cardsWrap.innerHTML = scored.map((s, idx) => `
+      <div class="card${idx === 0 ? ' best' : ''}">
         ${s.img
           ? `<img class="card-thumb" src="${esc(s.img)}" alt="${esc(s.name)}" onerror="this.outerHTML='<div class=card-thumb-ph>♪</div>'">`
           : `<div class="card-thumb-ph">♪</div>`}
         <div class="card-body">
+          ${idx === 0 ? '<span class="best-badge">Best Match</span>' : ''}
           <p class="card-match">一致 ${s.score}タグ</p>
           <p class="card-name">${esc(s.name)}</p>
           <div class="card-tags">
@@ -753,6 +792,19 @@ function diagnose() {
   }
 
   res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // シェアボタン
+  const shareWrap = document.getElementById('share-wrap');
+  const shareBtn  = document.getElementById('share-btn');
+  if (scored.length > 0) {
+    const top     = scored[0];
+    const tagText = sel.join('・');
+    const tweet   = `🎵 BGM診断結果\n${tagText} で診断したら\n「${top.name}」がおすすめでした☁️\n\n#すみれのBGM #配信BGM`;
+    shareBtn.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent('https://sumirebgm.github.io/sumirebgm')}`;
+    shareWrap.style.display = 'block';
+  } else {
+    shareWrap.style.display = 'none';
+  }
 }
 
 // ========== ADMIN ==========
