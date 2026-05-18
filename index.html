@@ -215,12 +215,12 @@ body { font-family:'Shippori Mincho','Hiragino Mincho ProN',serif; background:va
     <div class="admin-title">管理画面</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn-add" onclick="openModal()">＋ 曲を追加</button>
-      <button class="btn-export" onclick="exportHTML()">HTMLを書き出す</button>
+      <button class="btn-export" onclick="exportJSON()">songs.jsonを書き出す</button>
       <button class="btn-logout" onclick="logout()">ログアウト</button>
     </div>
   </div>
   <div class="export-note">
-    💡 曲の追加・編集後は「HTMLを書き出す」を押してダウンロードし、GitHubの index.html に上書きアップロードしてください。
+    💡 曲の追加・編集後は「songs.jsonを書き出す」を押してダウンロードし、GitHubの songs.json に上書きアップロードしてください。HTMLは一度アップすれば触らなくてOKです。
   </div>
   <div class="admin-tabs" style="margin-top:24px">
     <button class="admin-tab active" onclick="switchTab('songs',this)">曲の管理</button>
@@ -266,15 +266,25 @@ body { font-family:'Shippori Mincho','Hiragino Mincho ProN',serif; background:va
 </div>
 
 <script>
-// ===== 埋め込みデータ（HTMLを書き出すと自動更新される） =====
-const EMBEDDED_SONGS = /*SONGS_START*/[{"name":"深夜のおさんぽ","url":"https://sumirebgm.booth.pm/items/8325298","img":"https://i.ibb.co/DfJzV9K4/10801080.png","tags":["チル","かわいい","まったり","おやすみ","鉄琴","アコギ"]}]/*SONGS_END*/;
-const EMBEDDED_TAGS  = /*TAGS_START*/{"mood":["チル","かわいい","おしゃれ","まったり","ゆるい","エモい","元気","切ない","クール","しっとり","怪しい","和風"],"scene":["作業配信","朝配信","雑談","おやすみ","配信OP","配信ED","イベント"],"sound":["ピアノ","エレピ","リコーダー","オルゴール","鉄琴","木琴","アコギ","ウクレレ","ぴこぴこ","猫","雨音"]}/*TAGS_END*/;
-
 const ADMIN_PW = 'sumiresumire1STpipipi';
 
-// 作業用データ（管理画面での編集はこちら）
-let workSongs = JSON.parse(JSON.stringify(EMBEDDED_SONGS));
-let workTags  = JSON.parse(JSON.stringify(EMBEDDED_TAGS));
+const DEFAULT_TAGS = {"mood":["チル","かわいい","おしゃれ","まったり","ゆるい","エモい","元気","切ない","クール","しっとり","怪しい"],"scene":["作業配信","朝配信","雑談","おやすみ","配信OP","配信ED","イベント"],"sound":["ピアノ","エレピ","リコーダー","オルゴール","鉄琴","木琴","アコギ","ウクレレ","ぴこぴこ","猫","雨音"]};
+
+let workSongs = [];
+let workTags  = JSON.parse(JSON.stringify(DEFAULT_TAGS));
+
+// songs.jsonを読み込む
+async function loadData() {
+  try {
+    const res = await fetch('songs.json?t=' + Date.now());
+    if (res.ok) {
+      const data = await res.json();
+      workSongs = data.songs || [];
+      workTags  = data.tags  || JSON.parse(JSON.stringify(DEFAULT_TAGS));
+    }
+  } catch(e) {}
+  renderDiagTags();
+}
 
 // ===== NAVIGATION =====
 function show(id) {
@@ -495,24 +505,12 @@ function deleteSong(i) {
 }
 
 // ===== EXPORT =====
-function exportHTML() {
-  const src = document.currentScript ? document.currentScript.src : '';
-  // 現在のHTMLソースを取得して曲・タグデータを差し替える
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', location.href, false);
-  xhr.send();
-  let html = xhr.responseText;
-
-  const songsJson = JSON.stringify(workSongs);
-  const tagsJson  = JSON.stringify(workTags);
-
-  html = html.replace(/\/\*SONGS_START\*\/[\s\S]*?\/\*SONGS_END\*\//, `/*SONGS_START*/${songsJson}/*SONGS_END*/`);
-  html = html.replace(/\/\*TAGS_START\*\/[\s\S]*?\/\*TAGS_END\*\//, `/*TAGS_START*/${tagsJson}/*TAGS_END*/`);
-
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+function exportJSON() {
+  const data = { songs: workSongs, tags: workTags };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'index.html';
+  a.download = 'songs.json';
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -523,7 +521,7 @@ function esc(s) {
 }
 
 // ===== INIT =====
-renderDiagTags();
+loadData();
 </script>
 </body>
 </html>
