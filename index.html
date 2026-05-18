@@ -74,9 +74,10 @@ body { font-family:'Shippori Mincho','Hiragino Mincho ProN',serif; background:va
 .share-wrap { text-align:center; margin-top:32px; }
 .btn-share { display:inline-flex; align-items:center; gap:8px; padding:11px 32px; border:1px solid #1d9bf0; background:#1d9bf0; color:#fff; font-family:'Shippori Mincho',serif; font-size:13px; letter-spacing:.16em; cursor:pointer; text-decoration:none; transition:background .2s; }
 .btn-share:hover { background:#0d8ae0; border-color:#0d8ae0; }
-.admin-link-wrap { text-align:center; margin-top:72px; }
-.admin-link { font-family:'Cormorant Garamond',serif; font-size:11px; letter-spacing:.2em; color:var(--white); cursor:pointer; transition:color .15s; background:none; border:none; }
-.admin-link:hover { color:var(--lav); }
+.admin-link-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:72px; }
+.admin-link { font-family:'Cormorant Garamond',serif; font-size:8px; letter-spacing:.18em; color:var(--cream); cursor:pointer; text-decoration:none; display:block; padding:2px; }
+.x-link { display:flex; align-items:center; justify-content:center; width:32px; height:32px; color:var(--lav); transition:color .15s; text-decoration:none; }
+.x-link:hover { color:var(--purple); }
 
 /* ===== LOGIN ===== */
 #screen-login { max-width:360px; margin:0 auto; padding:100px 24px; text-align:center; }
@@ -163,6 +164,7 @@ body { font-family:'Shippori Mincho','Hiragino Mincho ProN',serif; background:va
     <p class="site-eyebrow">✦ すみれのBGM ✦</p>
     <h1 class="site-title">BGM 診 断</h1>
     <p class="site-sub">あなたの配信にぴったりの音を探します</p>
+  <p style="font-size:11px;color:var(--lav);letter-spacing:.1em;margin-top:4px">気になるものだけ選んでください</p>
   </div>
   <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
   <div class="cat">
@@ -192,7 +194,10 @@ body { font-family:'Shippori Mincho','Hiragino Mincho ProN',serif; background:va
     </div>
   </div>
   <div class="admin-link-wrap">
-    <button class="admin-link" onclick="showLogin()">管理者ページ</button>
+    <a class="admin-link" onclick="showLogin()">管理者ページ</a>
+    <a class="x-link" href="https://x.com/sumirebgm" target="_blank" rel="noopener" aria-label="X">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.261 5.638 5.903-5.638zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
   </div>
 </div>
 
@@ -268,7 +273,7 @@ body { font-family:'Shippori Mincho','Hiragino Mincho ProN',serif; background:va
 <script>
 const ADMIN_PW = 'sumiresumire1STpipipi';
 
-const DEFAULT_TAGS = {"mood":["チル","かわいい","おしゃれ","まったり","ゆるい","エモい","元気","切ない","クール","しっとり","怪しい"],"scene":["作業配信","朝配信","雑談","おやすみ","配信OP","配信ED","イベント"],"sound":["ピアノ","エレピ","リコーダー","オルゴール","鉄琴","木琴","アコギ","ウクレレ","ぴこぴこ","猫","雨音"]};
+const DEFAULT_TAGS = {"mood":["チル","かわいい","おしゃれ","まったり","ゆるい","エモい","元気","切ない","クール","しっとり","怪しい","和風"],"scene":["作業配信","朝配信","雑談","おやすみ","配信OP","配信ED","イベント","雨"],"sound":["ピアノ","エレピ","リコーダー","オルゴール","鉄琴","木琴","アコギ","ウクレレ","ぴこぴこ","猫"]};
 
 let workSongs = [];
 let workTags  = JSON.parse(JSON.stringify(DEFAULT_TAGS));
@@ -377,7 +382,7 @@ function diagnose() {
 
     const shareWrap = document.getElementById('share-wrap');
     const shareBtn  = document.getElementById('share-btn');
-    const tweet = `🎵 BGM診断結果\n${sel.join('・')} で診断したら\n「${scored[0].name}」がおすすめでした☁️\n\n#すみれのBGM #配信BGM`;
+    const tweet = `🎵 すみれのBGM診断やってみた\n「${scored[0].name}」がおすすめでした☁️\n\n#すみれのBGM診断`;
     shareBtn.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent('https://sumirebgm.github.io/sumirebgm')}`;
     shareWrap.style.display = 'block';
   }
