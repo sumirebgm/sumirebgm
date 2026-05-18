@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BGM診断 | すみれのBGM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:       #2d1f3d;
+  --purple:    #7a4faa;
+  --mid:       #9b7ec8;
+  --lav:       #b89fd4;
+  --pale:      #e8e0f0;
+  --cream:     #faf8f5;
+  --white:     #ffffff;
+  --muted:     #7a6a8a;
+  --danger:    #c0392b;
+}
+
+body {
+  font-family: 'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ========== SCREENS ========== */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ========== DIAGNOSIS SCREEN ========== */
+#screen-diag {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+.site-header { text-align: center; margin-bottom: 48px; }
+.site-eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  letter-spacing: .28em;
+  color: var(--lav);
+  margin-bottom: 10px;
+}
+.site-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px;
+  font-weight: 300;
+  color: var(--ink);
+  letter-spacing: .12em;
+  margin-bottom: 8px;
+}
+.site-sub {
+  font-size: 12px;
+  color: var(--lav);
+  letter-spacing: .16em;
+}
+
+.divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 0 0 36px;
+}
+.divider-line { flex: 1; height: .5px; background: var(--pale); }
+.divider-diamond {
+  width: 6px; height: 6px;
+  background: var(--lav);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* Tag categories */
+.cat { margin-bottom: 28px; }
+.cat-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.cat-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: .18em;
+  white-space: nowrap;
+}
+.cat-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  color: var(--lav);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.cat-line { flex: 1; height: .5px; background: var(--pale); }
+
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tag {
+  padding: 6px 16px;
+  border: 1px solid var(--mid);
+  background: var(--white);
+  color: var(--purple);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px;
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.tag:hover { background: var(--purple); color: var(--white); border-color: var(--purple); }
+.tag.sel  { background: var(--purple); color: var(--white); border-color: var(--purple); font-weight: 600; }
+
+/* Diagnose button */
+.btn-area { text-align: center; margin: 36px 0 0; }
+.btn-diagnose {
+  padding: 13px 56px;
+  border: 1px solid var(--mid);
+  background: var(--mid);
+  color: var(--white);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 14px;
+  letter-spacing: .22em;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.btn-diagnose:hover { background: var(--ink); border-color: var(--ink); }
+
+/* Results */
+#results { margin-top: 52px; display: none; }
+#results.show { display: block; }
+
+.res-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.res-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: .28em;
+  color: var(--lav);
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 12px;
+}
+.res-label::before, .res-label::after { content: ''; flex: 1; height: .5px; background: var(--pale); }
+
+.no-result {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: .08em;
+  line-height: 2;
+}
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+
+.card {
+  background: var(--white);
+  border: .5px solid var(--pale);
+  overflow: hidden;
+  transition: box-shadow .2s, transform .2s;
+}
+.card:hover { box-shadow: 0 4px 20px rgba(122,79,170,.1); transform: translateY(-2px); }
+
+.card-thumb {
+  width: 100%; aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  background: #f0eaf8;
+}
+.card-thumb-ph {
+  width: 100%; aspect-ratio: 1;
+  background: #f0eaf8;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  color: var(--lav);
+}
+
+.card-body { padding: 14px 16px 16px; }
+.card-match {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: .2em;
+  color: var(--mid);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+.card-tag {
+  font-size: 10px;
+  padding: 2px 7px;
+  border: .5px solid var(--pale);
+  color: var(--muted);
+}
+.card-tag.matched { border-color: var(--mid); color: var(--purple); background: #f5f0fb; }
+
+.booth-link {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--mid);
+  color: var(--purple);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-align: center;
+  background: var(--white);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .15s;
+}
+.booth-link:hover { background: var(--purple); color: var(--white); border-color: var(--purple); }
+
+/* Admin link */
+.admin-link-wrap {
+  text-align: center;
+  margin-top: 72px;
+}
+.admin-link {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: .2em;
+  color: var(--white);
+  cursor: pointer;
+  transition: color .15s;
+  background: none;
+  border: none;
+}
+.admin-link:hover { color: var(--lav); }
+
+/* ========== ADMIN LOGIN ========== */
+#screen-login {
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 100px 24px;
+  text-align: center;
+}
+.login-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--ink);
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+}
+.login-sub { font-size: 12px; color: var(--muted); letter-spacing: .1em; margin-bottom: 36px; }
+.form-group { margin-bottom: 16px; text-align: left; }
+.form-label { display: block; font-size: 11px; letter-spacing: .2em; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--pale);
+  background: var(--white);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s;
+}
+.form-input:focus { border-color: var(--mid); }
+.login-err { font-size: 12px; color: var(--danger); margin-bottom: 12px; min-height: 18px; }
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--mid);
+  background: var(--mid);
+  color: var(--white);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 14px;
+  letter-spacing: .2em;
+  cursor: pointer;
+  transition: background .2s;
+  margin-top: 8px;
+}
+.btn-login:hover { background: var(--purple); border-color: var(--purple); }
+.back-link { display: block; margin-top: 24px; font-size: 12px; color: var(--muted); cursor: pointer; letter-spacing: .1em; background: none; border: none; font-family: inherit; }
+.back-link:hover { color: var(--purple); }
+
+/* ========== ADMIN PANEL ========== */
+#screen-admin { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+
+.admin-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 36px; flex-wrap: wrap; gap: 12px;
+}
+.admin-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300;
+  color: var(--ink); letter-spacing: .1em;
+}
+
+.admin-tabs { display: flex; gap: 4px; margin-bottom: 28px; }
+.admin-tab {
+  padding: 8px 20px;
+  border: 1px solid var(--pale);
+  background: var(--white);
+  color: var(--muted);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: all .15s;
+}
+.admin-tab.active { border-color: var(--mid); background: var(--mid); color: var(--white); }
+.admin-tab:hover:not(.active) { border-color: var(--lav); color: var(--purple); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Song list */
+.song-list { display: flex; flex-direction: column; gap: 10px; }
+.song-row {
+  display: grid;
+  grid-template-columns: 56px 1fr 1fr auto;
+  gap: 16px;
+  align-items: center;
+  background: var(--white);
+  border: .5px solid var(--pale);
+  padding: 12px 16px;
+  transition: border-color .15s;
+}
+.song-row:hover { border-color: var(--lav); }
+.song-row-thumb {
+  width: 44px; height: 44px;
+  object-fit: cover;
+  background: #f0eaf8;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--lav);
+  flex-shrink: 0;
+}
+.song-row-thumb img { width: 44px; height: 44px; object-fit: cover; display: block; }
+.song-row-name { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+.song-row-url { font-size: 11px; color: var(--muted); margin-top: 2px; word-break: break-all; }
+.song-row-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.song-row-tag { font-size: 10px; padding: 2px 6px; border: .5px solid var(--pale); color: var(--muted); }
+.song-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-edit, .btn-del {
+  padding: 5px 12px;
+  border: 1px solid var(--pale);
+  background: var(--white);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+  color: var(--muted);
+}
+.btn-edit:hover { border-color: var(--mid); color: var(--purple); }
+.btn-del:hover { border-color: var(--danger); color: var(--danger); }
+
+.btn-add {
+  padding: 9px 22px;
+  border: 1px solid var(--mid);
+  background: var(--mid);
+  color: var(--white);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px;
+  letter-spacing: .1em;
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-add:hover { background: var(--purple); border-color: var(--purple); }
+
+.btn-logout {
+  padding: 8px 18px;
+  border: 1px solid var(--pale);
+  background: var(--white);
+  color: var(--muted);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 12px;
+  letter-spacing: .1em;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-logout:hover { border-color: var(--lav); color: var(--purple); }
+
+/* Modal */
+.modal-bg {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(45,31,61,.4);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--white);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 36px 32px;
+}
+.modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 300;
+  color: var(--ink); letter-spacing: .1em;
+  margin-bottom: 28px;
+}
+.modal-actions { display: flex; gap: 10px; margin-top: 28px; justify-content: flex-end; }
+.btn-save {
+  padding: 10px 28px;
+  border: 1px solid var(--mid);
+  background: var(--mid);
+  color: var(--white);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px;
+  letter-spacing: .12em;
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-save:hover { background: var(--purple); border-color: var(--purple); }
+.btn-cancel {
+  padding: 10px 28px;
+  border: 1px solid var(--pale);
+  background: var(--white);
+  color: var(--muted);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px;
+  letter-spacing: .12em;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-cancel:hover { border-color: var(--lav); color: var(--purple); }
+
+/* Tag manager */
+.tag-manager-cat { margin-bottom: 28px; }
+.tag-manager-head {
+  font-size: 12px; font-weight: 600;
+  color: var(--ink); letter-spacing: .16em;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.tag-manager-head::after { content: ''; flex: 1; height: .5px; background: var(--pale); }
+.tag-manager-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.mgr-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--mid);
+  background: var(--white);
+  color: var(--purple);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 12px;
+}
+.mgr-tag-del {
+  width: 14px; height: 14px;
+  background: none; border: none;
+  color: var(--lav); cursor: pointer;
+  font-size: 12px; line-height: 1;
+  padding: 0; display: flex; align-items: center;
+}
+.mgr-tag-del:hover { color: var(--danger); }
+.tag-add-row { display: flex; gap: 8px; }
+.tag-add-input {
+  flex: 1; padding: 7px 12px;
+  border: 1px solid var(--pale);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px; color: var(--ink);
+  outline: none;
+}
+.tag-add-input:focus { border-color: var(--mid); }
+.btn-tag-add {
+  padding: 7px 16px;
+  border: 1px solid var(--mid);
+  background: var(--white);
+  color: var(--purple);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 12px; cursor: pointer;
+  transition: all .15s;
+}
+.btn-tag-add:hover { background: var(--mid); color: var(--white); }
+
+/* Checkbox tags in modal */
+.modal-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 8px; }
+.modal-tag {
+  padding: 5px 14px;
+  border: 1px solid var(--pale);
+  background: var(--white);
+  color: var(--muted);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 12px; cursor: pointer;
+  transition: all .15s;
+}
+.modal-tag:hover { border-color: var(--lav); color: var(--purple); }
+.modal-tag.sel { border-color: var(--purple); background: #f0eaf8; color: var(--purple); font-weight: 600; }
+
+.section-head { font-size: 11px; letter-spacing: .2em; color: var(--muted); margin: 20px 0 10px; text-transform: uppercase; }
+
+/* Util */
+.empty-state { text-align: center; padding: 48px; color: var(--muted); font-size: 13px; line-height: 2; letter-spacing: .08em; }
+</style>
+</head>
+<body>
+
+<!-- ========== DIAGNOSIS ========== -->
+<div id="screen-diag" class="screen active">
+  <div class="site-header">
+    <p class="site-eyebrow">✦ すみれのBGM ✦</p>
+    <h1 class="site-title">BGM 診 断</h1>
+    <p class="site-sub">あなたの配信にぴったりの音を探します</p>
+  </div>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
+
+  <div class="cat">
+    <div class="cat-head">
+      <span class="cat-name">雰囲気</span>
+      <span class="cat-en">Mood</span>
+      <div class="cat-line"></div>
+    </div>
+    <div class="tags" id="tags-mood"></div>
+  </div>
+
+  <div class="cat">
+    <div class="cat-head">
+      <span class="cat-name">シーン</span>
+      <span class="cat-en">Scene</span>
+      <div class="cat-line"></div>
+    </div>
+    <div class="tags" id="tags-scene"></div>
+  </div>
+
+  <div class="cat">
+    <div class="cat-head">
+      <span class="cat-name">音・楽器</span>
+      <span class="cat-en">Sound</span>
+      <div class="cat-line"></div>
+    </div>
+    <div class="tags" id="tags-sound"></div>
+  </div>
+
+  <div class="btn-area">
+    <button class="btn-diagnose" onclick="diagnose()">診断する</button>
+  </div>
+
+  <div id="results">
+    <div class="res-label">おすすめ曲</div>
+    <div class="cards" id="result-cards"></div>
+    <div class="no-result" id="no-result" style="display:none">
+      条件に合う曲が見つかりませんでした。<br>タグを変えて試してみてください。
+    </div>
+  </div>
+
+  <div class="admin-link-wrap">
+    <button class="admin-link" onclick="showLogin()">管理者ページ</button>
+  </div>
+</div>
+
+<!-- ========== LOGIN ========== -->
+<div id="screen-login" class="screen">
+  <div class="login-title">管理者ログイン</div>
+  <p class="login-sub">パスワードを入力してください</p>
+  <div class="form-group">
+    <label class="form-label">Password</label>
+    <input class="form-input" type="password" id="pw-input" placeholder="••••••••"
+      onkeydown="if(event.key==='Enter')doLogin()">
+  </div>
+  <div class="login-err" id="login-err"></div>
+  <button class="btn-login" onclick="doLogin()">ログイン</button>
+  <button class="back-link" onclick="show('screen-diag')">← 診断画面に戻る</button>
+</div>
+
+<!-- ========== ADMIN ========== -->
+<div id="screen-admin" class="screen">
+  <div class="admin-header">
+    <div class="admin-title">管理画面</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-add" onclick="openModal()">＋ 曲を追加</button>
+      <button class="btn-logout" onclick="logout()">ログアウト</button>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="switchTab('songs',this)">曲の管理</button>
+    <button class="admin-tab" onclick="switchTab('tags',this)">タグの管理</button>
+  </div>
+
+  <!-- Songs tab -->
+  <div class="tab-panel active" id="tab-songs">
+    <div class="song-list" id="song-list"></div>
+    <div class="empty-state" id="song-empty" style="display:none">
+      まだ曲が登録されていません。<br>「＋ 曲を追加」から登録してください。
+    </div>
+  </div>
+
+  <!-- Tags tab -->
+  <div class="tab-panel" id="tab-tags">
+    <div id="tag-manager"></div>
+  </div>
+</div>
+
+<!-- ========== MODAL ========== -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">曲を追加</div>
+
+    <div class="form-group">
+      <label class="form-label">曲名</label>
+      <input class="form-input" id="m-name" type="text" placeholder="例：雨の日の喫茶店">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">BOOTHのURL</label>
+      <input class="form-input" id="m-url" type="url" placeholder="https://sumirebgm.booth.pm/items/...">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">サムネイル画像URL</label>
+      <input class="form-input" id="m-img" type="url" placeholder="imgbbなどにアップしたURLを貼ってください">
+    </div>
+
+    <div class="section-head">タグを選択（複数可）</div>
+    <div class="section-head" style="margin-top:4px;font-size:10px;color:var(--lav)">雰囲気</div>
+    <div class="modal-tags" id="modal-tags-mood"></div>
+    <div class="section-head" style="font-size:10px;color:var(--lav)">シーン</div>
+    <div class="modal-tags" id="modal-tags-scene"></div>
+    <div class="section-head" style="font-size:10px;color:var(--lav)">音・楽器</div>
+    <div class="modal-tags" id="modal-tags-sound"></div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-save" onclick="saveSong()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+const ADMIN_PW = 'sumire2024';
+
+const DEFAULT_TAGS = {
+  mood:  ['チル','かわいい','おしゃれ','まったり','ゆるい','エモい','元気','切ない','クール','しっとり','怪しい'],
+  scene: ['作業配信','朝配信','雑談','おやすみ','配信OP','配信ED'],
+  sound: ['ピアノ','エレピ','リコーダー','オルゴール','鉄琴','木琴','アコギ','ウクレレ','ぴこぴこ','猫','雨音'],
+};
+
+function loadTags() {
+  try {
+    const s = localStorage.getItem('sumire_tags');
+    return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT_TAGS));
+  } catch { return JSON.parse(JSON.stringify(DEFAULT_TAGS)); }
+}
+function saveTags(tags) { localStorage.setItem('sumire_tags', JSON.stringify(tags)); }
+
+function loadSongs() {
+  try {
+    const s = localStorage.getItem('sumire_songs');
+    return s ? JSON.parse(s) : [];
+  } catch { return []; }
+}
+function saveSongs(songs) { localStorage.setItem('sumire_songs', JSON.stringify(songs)); }
+
+// ========== NAVIGATION ==========
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showLogin() { show('screen-login'); }
+
+function logout() { show('screen-diag'); }
+
+// ========== LOGIN ==========
+function doLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === ADMIN_PW) {
+    document.getElementById('pw-input').value = '';
+    document.getElementById('login-err').textContent = '';
+    show('screen-admin');
+    renderAdmin();
+  } else {
+    document.getElementById('login-err').textContent = 'パスワードが違います';
+  }
+}
+
+// ========== DIAGNOSIS ==========
+let selectedTags = new Set();
+
+function renderDiagTags() {
+  const tags = loadTags();
+  ['mood','scene','sound'].forEach(cat => {
+    const wrap = document.getElementById('tags-' + cat);
+    wrap.innerHTML = '';
+    (tags[cat] || []).forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'tag' + (selectedTags.has(t) ? ' sel' : '');
+      btn.textContent = t;
+      btn.onclick = () => {
+        if (selectedTags.has(t)) selectedTags.delete(t);
+        else selectedTags.add(t);
+        btn.classList.toggle('sel');
+      };
+      wrap.appendChild(btn);
+    });
+  });
+}
+
+function diagnose() {
+  const songs = loadSongs();
+  const sel = [...selectedTags];
+  const res = document.getElementById('results');
+  const cardsWrap = document.getElementById('result-cards');
+  const noRes = document.getElementById('no-result');
+
+  if (sel.length === 0) {
+    res.classList.add('show');
+    cardsWrap.innerHTML = '';
+    noRes.style.display = 'block';
+    noRes.textContent = 'タグをひとつ以上選んでください。';
+    res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  const scored = songs.map(s => {
+    const stags = s.tags || [];
+    const matched = sel.filter(t => stags.includes(t));
+    return { ...s, matched, score: matched.length };
+  }).filter(s => s.score > 0).sort((a,b) => b.score - a.score);
+
+  res.classList.add('show');
+
+  if (scored.length === 0) {
+    cardsWrap.innerHTML = '';
+    noRes.style.display = 'block';
+    noRes.textContent = '条件に合う曲が見つかりませんでした。タグを変えて試してみてください。';
+  } else {
+    noRes.style.display = 'none';
+    cardsWrap.innerHTML = scored.map(s => `
+      <div class="card">
+        ${s.img
+          ? `<img class="card-thumb" src="${esc(s.img)}" alt="${esc(s.name)}" onerror="this.outerHTML='<div class=card-thumb-ph>♪</div>'">`
+          : `<div class="card-thumb-ph">♪</div>`}
+        <div class="card-body">
+          <p class="card-match">一致 ${s.score}タグ</p>
+          <p class="card-name">${esc(s.name)}</p>
+          <div class="card-tags">
+            ${(s.tags||[]).map(t => `<span class="card-tag${s.matched.includes(t)?' matched':''}">${esc(t)}</span>`).join('')}
+          </div>
+          <a class="booth-link" href="${esc(s.url)}" target="_blank" rel="noopener">BOOTHで見る →</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ========== ADMIN ==========
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'tags') renderTagManager();
+}
+
+function renderAdmin() {
+  renderSongList();
+}
+
+function renderSongList() {
+  const songs = loadSongs();
+  const list = document.getElementById('song-list');
+  const empty = document.getElementById('song-empty');
+  if (songs.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    list.innerHTML = songs.map((s, i) => `
+      <div class="song-row">
+        <div class="song-row-thumb">
+          ${s.img ? `<img src="${esc(s.img)}" alt="" onerror="this.outerHTML='♪'">` : '♪'}
+        </div>
+        <div>
+          <div class="song-row-name">${esc(s.name)}</div>
+          <div class="song-row-url">${esc(s.url)}</div>
+        </div>
+        <div class="song-row-tags">
+          ${(s.tags||[]).map(t => `<span class="song-row-tag">${esc(t)}</span>`).join('')}
+        </div>
+        <div class="song-row-actions">
+          <button class="btn-edit" onclick="openModal(${i})">編集</button>
+          <button class="btn-del" onclick="deleteSong(${i})">削除</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function renderTagManager() {
+  const tags = loadTags();
+  const wrap = document.getElementById('tag-manager');
+  const catNames = { mood: '雰囲気', scene: 'シーン', sound: '音・楽器' };
+  wrap.innerHTML = Object.entries(catNames).map(([cat, name]) => `
+    <div class="tag-manager-cat">
+      <div class="tag-manager-head">${name}</div>
+      <div class="tag-manager-tags" id="mgr-${cat}">
+        ${(tags[cat]||[]).map((t,i) => `
+          <span class="mgr-tag">
+            ${esc(t)}
+            <button class="mgr-tag-del" onclick="deleteTag('${cat}',${i})" title="削除">✕</button>
+          </span>
+        `).join('')}
+      </div>
+      <div class="tag-add-row">
+        <input class="tag-add-input" id="tag-input-${cat}" type="text" placeholder="タグを追加"
+          onkeydown="if(event.key==='Enter')addTag('${cat}')">
+        <button class="btn-tag-add" onclick="addTag('${cat}')">追加</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addTag(cat) {
+  const inp = document.getElementById('tag-input-' + cat);
+  const val = inp.value.trim();
+  if (!val) return;
+  const tags = loadTags();
+  if (!tags[cat].includes(val)) {
+    tags[cat].push(val);
+    saveTags(tags);
+  }
+  inp.value = '';
+  renderTagManager();
+  renderDiagTags();
+}
+
+function deleteTag(cat, i) {
+  if (!confirm('このタグを削除しますか？')) return;
+  const tags = loadTags();
+  tags[cat].splice(i, 1);
+  saveTags(tags);
+  renderTagManager();
+  renderDiagTags();
+}
+
+// ========== MODAL ==========
+let editIndex = -1;
+
+function openModal(idx) {
+  editIndex = (idx !== undefined) ? idx : -1;
+  const songs = loadSongs();
+  const song = editIndex >= 0 ? songs[editIndex] : null;
+  const tags = loadTags();
+
+  document.getElementById('modal-title').textContent = song ? '曲を編集' : '曲を追加';
+  document.getElementById('m-name').value = song ? song.name : '';
+  document.getElementById('m-url').value  = song ? song.url  : '';
+  document.getElementById('m-img').value  = song ? song.img  : '';
+
+  const selTags = song ? (song.tags || []) : [];
+  ['mood','scene','sound'].forEach(cat => {
+    const wrap = document.getElementById('modal-tags-' + cat);
+    wrap.innerHTML = (tags[cat]||[]).map(t => `
+      <button class="modal-tag${selTags.includes(t)?' sel':''}" onclick="this.classList.toggle('sel')">${esc(t)}</button>
+    `).join('');
+  });
+
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+}
+
+function saveSong() {
+  const name = document.getElementById('m-name').value.trim();
+  const url  = document.getElementById('m-url').value.trim();
+  const img  = document.getElementById('m-img').value.trim();
+  if (!name || !url) { alert('曲名とBOOTH URLは必須です'); return; }
+
+  const selTags = [];
+  document.querySelectorAll('.modal-tag.sel').forEach(b => selTags.push(b.textContent));
+
+  const songs = loadSongs();
+  const entry = { name, url, img, tags: selTags };
+  if (editIndex >= 0) songs[editIndex] = entry;
+  else songs.push(entry);
+  saveSongs(songs);
+  closeModal();
+  renderSongList();
+}
+
+function deleteSong(i) {
+  if (!confirm('この曲を削除しますか？')) return;
+  const songs = loadSongs();
+  songs.splice(i, 1);
+  saveSongs(songs);
+  renderSongList();
+}
+
+// ========== UTIL ==========
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ========== INIT ==========
+renderDiagTags();
+</script>
+</body>
+</html>
