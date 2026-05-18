@@ -9,13 +9,13 @@
     {
       "name": "森でまったり",
       "url": "https://sumirebgm.booth.pm/items/6782424",
-      "img": "",
+      "img": "https://i.ibb.co/ychCwRN1/image.png",
       "tags": ["かわいい","まったり","ゆるい","作業配信","朝配信","雑談","ピアノ","アコギ"]
     },
     {
       "name": "コーヒーとお散歩",
       "url": "https://sumirebgm.booth.pm/items/6067907",
-      "img": "",
+      "img": "https://i.ibb.co/DPGKFqzj/image.png",
       "tags": ["チル","おしゃれ","まったり","切ない","雑談","配信OP","エレピ","アコギ","猫"]
     },
     {
@@ -33,13 +33,13 @@
     {
       "name": "夜空のカクテル",
       "url": "https://sumirebgm.booth.pm/items/7242187",
-      "img": "",
+      "img": "https://i.ibb.co/DH0mPRrR/10801080.png",
       "tags": ["チル","かわいい","まったり","しっとり","おやすみ","配信ED","エレピ","オルゴール","アコギ","猫"]
     },
     {
       "name": "雨の日の庭",
       "url": "https://sumirebgm.booth.pm/items/8178584",
-      "img": "",
+      "img": "https://i.ibb.co/SXjsfqZV/10801080.png",
       "tags": ["チル","かわいい","まったり","作業配信","朝配信","雑談","雨","エレピ","オルゴール","猫"]
     },
     {
@@ -47,6 +47,234 @@
       "url": "https://sumirebgm.booth.pm/items/7034735",
       "img": "",
       "tags": ["チル","かわいい","まったり","雑談","おやすみ","配信OP","エレピ","オルゴール","猫"]
+    },
+    {
+      "name": "雨の日の図書館",
+      "url": "https://sumirebgm.booth.pm/items/7767040",
+      "img": "",
+      "tags": ["チル","かわいい","まったり","おしゃれ","作業配信","雑談","雨","ピアノ","猫"]
+    },
+    {
+      "name": "Sleep Sheep",
+      "url": "https://sumirebgm.booth.pm/items/6169040",
+      "img": "",
+      "tags": ["チル","かわいい","おやすみ","オルゴール"]
+    },
+    {
+      "name": "夏の終わりに",
+      "url": "https://sumirebgm.booth.pm/items/6046199",
+      "img": "https://i.ibb.co/b5nmwHHC/2.png",
+      "tags": ["チル","エモい","切ない","しっとり","ピアノ"]
+    },
+    {
+      "name": "ネモフィラと風",
+      "url": "https://sumirebgm.booth.pm/items/3151940",
+      "img": "",
+      "tags": ["チル","おしゃれ","まったり","ゆるい","ピアノ"]
+    },
+    {
+      "name": "ぴこぴこクエスト",
+      "url": "https://sumirebgm.booth.pm/items/7319129",
+      "img": "",
+      "tags": ["かわいい","元気","配信OP","ぴこぴこ"]
+    },
+    {
+      "name": "GAME NIGHT",
+      "url": "https://sumirebgm.booth.pm/items/6284048",
+      "img": "",
+      "tags": ["かわいい","元気","ぴこぴこ"]
+    },
+    {
+      "name": "Sweets time",
+      "url": "https://sumirebgm.booth.pm/items/6103251",
+      "img": "",
+      "tags": ["かわいい","まったり","ゆるい","鉄琴"]
+    },
+    {
+      "name": "碧色東京",
+      "url": "https://sumirebgm.booth.pm/items/6701912",
+      "img": "",
+      "tags": ["チル","おしゃれ","エモい","クール","ピアノ","配信BGM"]
+    },
+    {
+      "name": "紅茶のヒメゴト",
+      "url": "https://sumirebgm.booth.pm/items/7668987",
+      "img": "",
+      "tags": ["チル","おしゃれ","エモい","しっとり","ピアノ","雑談","朝配信"]
+    },
+    {
+      "name": "チョコと乙女心",
+      "url": "https://sumirebgm.booth.pm/items/7929845",
+      "img": "",
+      "tags": ["かわいい","おしゃれ","元気","ピアノ","イベント"]
+    },
+    {
+      "name": "花は満ちて",
+      "url": "https://sumirebgm.booth.pm/items/8147213",
+      "img": "",
+      "tags": ["チル","かわいい","おしゃれ","作業配信","朝配信","エレピ"]
+    },
+    {
+      "name": "2025年ベスト盤",
+      "url": "https://sumirebgm.booth.pm/items/7819222",
+      "img": "",
+      "tags": ["チル","かわいい","おしゃれ","まったり","ゆるい"]
+    },
+    {
+      "name": "虚無ってる狸のテーマ",
+      "url": "https://sumirebgm.booth.pm/items/7978569",
+      "img": "",
+      "tags": ["かわいい","まったり","ゆるい","作業配信","雑談","リコーダー"]
+    },
+    {
+      "name": "猫とひみつの町",
+      "url": "https://sumirebgm.booth.pm/items/6952632",
+      "img": "",
+      "tags": ["チル","かわいい","まったり","ゆるい","ピアノ","猫"]
+    },
+    {
+      "name": "金木犀と猫",
+      "url": "https://sumirebgm.booth.pm/items/6195584",
+      "img": "",
+      "tags": ["チル","かわいい","まったり","ほっこり","作業配信","木琴","猫"]
+    },
+    {
+      "name": "Chill Bloom",
+      "url": "https://sumirebgm.booth.pm/items/6127548",
+      "img": "",
+      "tags": ["チル","おしゃれ","まったり","おやすみ","ピアノ"]
+    },
+    {
+      "name": "Chill snow",
+      "url": "https://sumirebgm.booth.pm/items/6614268",
+      "img": "",
+      "tags": ["チル","かわいい","おしゃれ","おやすみ","イベント","鉄琴"]
+    },
+    {
+      "name": "コーヒーとお散歩 Winter arrange",
+      "url": "https://sumirebgm.booth.pm/items/7877810",
+      "img": "",
+      "tags": ["チル","おしゃれ","まったり","イベント","オルゴール","アコギ"]
+    },
+    {
+      "name": "さむい冬と狼",
+      "url": "https://sumirebgm.booth.pm/items/7669011",
+      "img": "",
+      "tags": ["チル","しっとり","切ない","鉄琴","エレピ","猫"]
+    },
+    {
+      "name": "でろ甘チョコレート",
+      "url": "https://sumirebgm.booth.pm/items/6563073",
+      "img": "",
+      "tags": ["かわいい","元気","イベント","ぴこぴこ"]
+    },
+    {
+      "name": "もみじと狸",
+      "url": "https://sumirebgm.booth.pm/items/7406361",
+      "img": "",
+      "tags": ["かわいい","まったり","ゆるい","アコギ","リコーダー"]
+    },
+    {
+      "name": "CUTIE IDOL",
+      "url": "https://sumirebgm.booth.pm/items/6494324",
+      "img": "",
+      "tags": ["かわいい","元気","ぴこぴこ","配信OP"]
+    },
+    {
+      "name": "Apple pie",
+      "url": "https://sumirebgm.booth.pm/items/6215304",
+      "img": "",
+      "tags": ["かわいい","まったり","ゆるい","朝配信","ピアノ"]
+    },
+    {
+      "name": "See you!",
+      "url": "https://sumirebgm.booth.pm/items/6084634",
+      "img": "",
+      "tags": ["かわいい","元気","配信ED"]
+    },
+    {
+      "name": "SPOOKY HALLOWEEN",
+      "url": "https://sumirebgm.booth.pm/items/6150279",
+      "img": "",
+      "tags": ["怪しい","元気","イベント"]
+    },
+    {
+      "name": "ヴァンパイアガール",
+      "url": "https://sumirebgm.booth.pm/items/7568083",
+      "img": "",
+      "tags": ["怪しい","元気","イベント"]
+    },
+    {
+      "name": "ハロウィンと狸",
+      "url": "https://sumirebgm.booth.pm/items/7516249",
+      "img": "",
+      "tags": ["かわいい","怪しい","イベント","木琴"]
+    },
+    {
+      "name": "Happy birthday to you（ピコピコ）",
+      "url": "https://sumirebgm.booth.pm/items/6895099",
+      "img": "",
+      "tags": ["かわいい","元気","イベント","ぴこぴこ"]
+    },
+    {
+      "name": "聖女と贖罪の調べ",
+      "url": "https://sumirebgm.booth.pm/items/5768449",
+      "img": "",
+      "tags": ["しっとり","怪しい","オルゴール"]
+    },
+    {
+      "name": "Easy Mission",
+      "url": "https://sumirebgm.booth.pm/items/6661612",
+      "img": "",
+      "tags": ["おしゃれ","かっこいい","元気"]
+    },
+    {
+      "name": "Happy birthday to you（チル）",
+      "url": "https://sumirebgm.booth.pm/items/6972299",
+      "img": "",
+      "tags": ["チル","おしゃれ","イベント","ピアノ"]
+    },
+    {
+      "name": "tea time",
+      "url": "https://sumirebgm.booth.pm/items/6375525",
+      "img": "",
+      "tags": ["かわいい","まったり","朝配信","鉄琴","ピアノ"]
+    },
+    {
+      "name": "kawaii magic",
+      "url": "https://sumirebgm.booth.pm/items/5264206",
+      "img": "",
+      "tags": ["かわいい","元気","ぴこぴこ"]
+    },
+    {
+      "name": "ジングル集",
+      "url": "https://sumirebgm.booth.pm/items/5218801",
+      "img": "",
+      "tags": ["チル","かわいい","おしゃれ"]
+    },
+    {
+      "name": "お月見うさぎ",
+      "url": "https://sumirebgm.booth.pm/items/7431305",
+      "img": "",
+      "tags": ["チル","しっとり","切ない","和風","イベント","ピアノ"]
+    },
+    {
+      "name": "Twinkle star",
+      "url": "https://sumirebgm.booth.pm/items/6398713",
+      "img": "",
+      "tags": ["かわいい","元気","イベント","鉄琴"]
+    },
+    {
+      "name": "BRIGHT CHRISTMAS",
+      "url": "https://sumirebgm.booth.pm/items/6309266",
+      "img": "",
+      "tags": ["かわいい","元気","イベント"]
+    },
+    {
+      "name": "Snowdome",
+      "url": "https://sumirebgm.booth.pm/items/6323142",
+      "img": "",
+      "tags": ["かわいい","まったり","おやすみ","イベント","オルゴール"]
     }
   ],
   "tags": {
