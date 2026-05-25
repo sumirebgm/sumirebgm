@@ -487,8 +487,17 @@ async function loadFromGist(){
     const content=data.files['timer_data.json']?.content;
     if(content){
       const remote=JSON.parse(content);
-      state=remote;
-      localStorage.setItem(SKEY,JSON.stringify(state));
+      // Validate structure before using
+      if(remote&&remote.sumire&&remote.sumire.week&&remote.murasaki&&remote.murasaki.week){
+        state=remote;
+        localStorage.setItem(SKEY,JSON.stringify(state));
+      } else {
+        // Invalid structure, save default to Gist
+        await saveToGist();
+      }
+    } else {
+      // Empty Gist, save current state
+      await saveToGist();
     }
   }catch(e){console.log('Gist load error:',e);}
 }
