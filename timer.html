@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作業時間タイマー</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#9b7ec8;--purple-dark:#7a4faa;--purple-light:#d4c4e8;
+  --lav:#ede8f7;--lav-mid:#cdc2e8;--lav-dark:#b89fd4;
+  --red:#c0392b;--cream:#faf8f5;--white:#fff;
+  --ink:#2d1f3d;--muted:#7a6a8a;--pale:#e8e0f0;--soft:#f5f0fb;
+}
+body{font-family:-apple-system,'Hiragino Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;padding:24px 16px 48px}
+.wrap{max-width:580px;margin:0 auto}
+.main-tabs{display:flex;gap:4px;margin-bottom:20px}
+.mtab{flex:1;padding:10px;border:0.5px solid var(--pale);background:var(--white);color:var(--purple);font-family:inherit;font-size:13px;letter-spacing:.08em;cursor:pointer;text-align:center;transition:all .15s;border-radius:6px}
+.mtab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.period-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.period-tabs{display:flex;gap:6px}
+.ptab{padding:5px 16px;border:0.5px solid var(--pale);background:var(--white);color:var(--muted);font-size:12px;letter-spacing:.08em;cursor:pointer;font-family:inherit;border-radius:20px;transition:all .15s}
+.ptab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.date-lbl{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.timer-disp{text-align:center;padding:16px 0 4px;font-size:38px;font-weight:600;color:var(--ink);letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.timer-lbl{text-align:center;font-size:12px;color:var(--muted);margin-bottom:20px;min-height:18px}
+.cat-block{background:var(--white);border:0.5px solid var(--pale);padding:16px 18px;margin-bottom:10px;border-radius:8px}
+.cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cat-name{font-size:14px;font-weight:500;color:var(--ink)}
+.cat-time{font-size:15px;font-weight:600;color:var(--purple-dark);font-variant-numeric:tabular-nums}
+.gauge-outer{height:12px;background:var(--pale);border-radius:3px;margin-bottom:10px;overflow:hidden;position:relative}
+.cat-footer{display:flex;align-items:center;justify-content:space-between}
+.cat-remain{font-size:12px;font-weight:500;color:var(--muted)}
+.cat-remain.over{color:var(--red)}
+.btn-start{padding:6px 16px;border:0.5px solid var(--purple);background:var(--white);color:var(--purple-dark);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;border-radius:6px}
+.btn-start:hover{background:var(--purple);color:#fff}
+.btn-start.running{background:var(--red);border-color:var(--red);color:#fff}
+.total-block{background:var(--soft);border:0.5px solid var(--pale);padding:14px 18px;margin-top:6px;border-radius:8px}
+.total-row{display:flex;align-items:center;justify-content:space-between}
+.total-label{font-size:12px;font-weight:500;color:var(--muted)}
+.total-time{font-size:16px;font-weight:600;color:var(--purple-dark);font-variant-numeric:tabular-nums}
+.total-hint{font-size:11px;color:var(--lav-dark);margin-top:5px;letter-spacing:.04em}
+.review-name-tabs{display:flex;gap:4px;margin-bottom:20px}
+.rntab{padding:6px 18px;border:0.5px solid var(--pale);background:var(--white);color:var(--muted);font-family:inherit;font-size:12px;cursor:pointer;border-radius:20px;transition:all .15s}
+.rntab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.month-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.mnav-btn{width:32px;height:32px;border:0.5px solid var(--pale);background:var(--white);color:var(--purple-dark);font-size:20px;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0;line-height:1}
+.mnav-btn:hover{background:var(--soft);border-color:var(--purple)}
+.mnav-label{font-size:15px;font-weight:500;color:var(--ink);letter-spacing:.06em;min-width:100px;text-align:center}
+.salary-block{background:var(--white);border:0.5px solid var(--pale);padding:16px 18px;border-radius:8px;margin-bottom:20px}
+.salary-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.salary-label{font-size:12px;color:var(--muted);white-space:nowrap}
+.salary-input{flex:1;padding:7px 10px;border:0.5px solid var(--pale);background:var(--soft);font-family:inherit;font-size:14px;font-weight:500;color:var(--ink);border-radius:6px;text-align:right}
+.salary-input:focus{outline:none;border-color:var(--purple)}
+.salary-unit{font-size:12px;color:var(--muted)}
+.btn-save-salary{padding:6px 14px;border:0.5px solid var(--purple);background:var(--white);color:var(--purple-dark);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;border-radius:6px;transition:all .15s;white-space:nowrap}
+.btn-save-salary:hover{background:var(--purple);color:#fff}
+.save-ok{font-size:11px;color:#27ae60;min-height:16px;margin-bottom:8px}
+.hourly-row{display:flex;align-items:baseline;justify-content:space-between;padding-top:10px;border-top:0.5px solid var(--pale)}
+.hourly-label{font-size:12px;color:var(--muted)}
+.hourly-right{text-align:right}
+.hourly-val{font-size:24px;font-weight:600;color:var(--purple-dark);font-variant-numeric:tabular-nums}
+.hourly-sub{font-size:10px;color:var(--muted);display:block;margin-top:2px}
+.avg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+.avg-card{background:var(--white);border:0.5px solid var(--pale);padding:14px 16px;border-radius:8px}
+.avg-lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
+.avg-val-row{display:flex;align-items:baseline;gap:8px}
+.avg-val{font-size:20px;font-weight:600;color:var(--purple-dark);font-variant-numeric:tabular-nums}
+.avg-goal{font-size:11px;color:var(--lav-dark)}
+.chart-title{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:12px}
+.bar-chart{display:flex;align-items:flex-end;gap:3px;height:130px;padding-bottom:26px;position:relative;border-bottom:0.5px solid var(--pale)}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;height:100%}
+.bar{width:100%;background:var(--purple-light);border-radius:2px 2px 0 0;min-height:2px;position:relative}
+.bar.cur{background:var(--purple)}
+.bar-lbl{font-size:9px;color:var(--muted);position:absolute;bottom:-20px;white-space:nowrap;left:50%;transform:translateX(-50%)}
+.bar-val{font-size:9px;color:var(--muted);position:absolute;top:-15px;white-space:nowrap;left:50%;transform:translateX(-50%)}
+.avg-line{position:absolute;left:0;right:0;border-top:1.5px dashed var(--lav-dark);pointer-events:none}
+.avg-line-lbl{position:absolute;right:0;font-size:9px;color:var(--purple);transform:translateY(-13px);background:var(--cream);padding:0 3px}
+.io-row{display:flex;gap:8px;margin-top:32px;justify-content:center}
+.btn-io{padding:8px 20px;border:0.5px solid var(--pale);background:var(--white);color:var(--muted);font-family:inherit;font-size:12px;cursor:pointer;border-radius:6px;transition:all .15s}
+.btn-io:hover{border-color:var(--purple);color:var(--purple-dark)}
+.vol-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:24px}
+.vol-lbl{font-size:11px;color:var(--muted)}
+.vol-slider{width:120px;accent-color:var(--purple)}
+
+.token-row{display:flex;gap:8px;margin-top:10px;justify-content:center;align-items:center}
+.token-input{flex:1;max-width:300px;padding:7px 10px;border:0.5px solid var(--pale);background:var(--white);font-family:inherit;font-size:12px;color:var(--ink);border-radius:6px}
+.token-input:focus{outline:none;border-color:var(--purple)}
+.token-status{text-align:center;font-size:11px;color:var(--muted);margin-top:4px;min-height:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="main-tabs">
+    <button class="mtab active" onclick="switchMain('sumire',this)">すみれ</button>
+    <button class="mtab" onclick="switchMain('murasaki',this)">MURASAKI</button>
+    <button class="mtab" onclick="switchMain('review',this)">振り返り</button>
+  </div>
+
+  <div id="panel-timer">
+    <div class="period-row">
+      <div class="period-tabs">
+        <button class="ptab active" onclick="switchPeriod('week',this)">今週</button>
+        <button class="ptab" onclick="switchPeriod('month',this)">今月</button>
+      </div>
+      <div class="date-lbl" id="date-lbl"></div>
+    </div>
+    <div class="timer-disp" id="timer-disp">00:00:00</div>
+    <div class="timer-lbl" id="timer-lbl">カテゴリを選んでスタート</div>
+    <div id="cats"></div>
+    <div class="total-block">
+      <div class="total-row">
+        <span class="total-label">合計作業時間</span>
+        <span class="total-time" id="total-time">—</span>
+      </div>
+      <div class="total-hint" id="total-hint"></div>
+    </div>
+  </div>
+
+  <div id="panel-review" style="display:none">
+    <div class="review-name-tabs">
+      <button class="rntab active" onclick="switchReview('sumire',this)">すみれ</button>
+      <button class="rntab" onclick="switchReview('murasaki',this)">MURASAKI</button>
+    </div>
+    <div class="month-nav">
+      <button class="mnav-btn" onclick="changeReviewMonth(-1)">&#8249;</button>
+      <span class="mnav-label" id="mnav-label"></span>
+      <button class="mnav-btn" onclick="changeReviewMonth(1)">&#8250;</button>
+    </div>
+    <div class="salary-block">
+      <div class="salary-row">
+        <span class="salary-label">売上</span>
+        <input class="salary-input" type="number" id="salary-input" placeholder="0">
+        <span class="salary-unit">円</span>
+        <button class="btn-save-salary" onclick="saveSalary()">保存</button>
+      </div>
+      <div id="save-ok" class="save-ok"></div>
+      <div class="hourly-row">
+        <span class="hourly-label">時給</span>
+        <div class="hourly-right">
+          <span class="hourly-val" id="hourly-val">—</span>
+          <span class="hourly-sub" id="hourly-sub">売上を入力して保存してください</span>
+        </div>
+      </div>
+    </div>
+    <div class="avg-grid" id="avg-grid"></div>
+    <div class="chart-title">月別作業時間（過去12ヶ月）</div>
+    <div class="bar-chart" id="bar-chart"></div>
+  </div>
+
+  <div class="io-row">
+    <button class="btn-io" onclick="exportData()">&#8595; データをエクスポート</button>
+    <label class="btn-io" style="cursor:pointer">&#8593; インポート<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+  </div>
+  <div class="token-row">
+    <input class="token-input" type="password" id="token-input" placeholder="GitHub Token を入力して保存">
+    <button class="btn-io" onclick="saveToken()">保存</button>
+  </div>
+  <div id="token-status" class="token-status"></div>
+  <div class="vol-row">
+    <span class="vol-lbl">🔔 アラーム音量</span>
+    <input class="vol-slider" type="range" min="0" max="1" step="0.1" value="0.5" id="vol-slider">
+    <span class="vol-lbl" id="vol-val">50%</span>
+  </div>
+</div>
+
+<script>
+const SEG=180;
+const PC=['#d4c4e8','#b89fd4','#9b7ec8','#7a4faa'];
+const LC=['#ede8f7','#ddd5f0','#cdc2e8','#b89fd4'];
+
+const DEFS={
+  sumire:{
+    week:[
+      {name:'作曲①',goal:180,segs:null,pal:'p'},
+      {name:'作曲②',goal:180,segs:null,pal:'l'},
+      {name:'事務',goal:120,segs:null,pal:'p'},
+      {name:'新企画準備',goal:150,segs:null,pal:'l'},
+    ],
+    month:[
+      {name:'作曲①',goal:180,segs:null,pal:'p'},
+      {name:'作曲②',goal:180,segs:null,pal:'l'},
+      {name:'事務',goal:480,segs:null,pal:'p'},
+      {name:'新企画準備',goal:600,segs:null,pal:'l'},
+    ],
+    tg:{week:570,month:1320},
+    hint:{week:'今週の目安：5〜5.5h',month:'月目標：21h以内'}
+  },
+  murasaki:{
+    week:[
+      {name:'作曲',goal:720,segs:SEG,pal:'p'},
+      {name:'事務',goal:720,segs:SEG,pal:'p'},
+    ],
+    month:[
+      {name:'作曲',goal:2880,segs:null,pal:'p'},
+      {name:'事務',goal:2880,segs:null,pal:'p'},
+    ],
+    tg:{week:1440,month:5760},
+    hint:{week:'今週の目安：作曲3h＋事務3h',month:'月目標：各48h（3h×16日）'}
+  }
+};
+
+const SKEY='sumire_timer_v2';
+function loadState(){
+  try{const s=localStorage.getItem(SKEY);if(s)return JSON.parse(s);}catch(e){}
+  return buildDefault();
+}
+function buildDefault(){
+  const s={sumire:{week:{},month:{}},murasaki:{week:{},month:{}},running:null};
+  for(const tab of['sumire','murasaki']){
+    for(const p of['week','month']){
+      DEFS[tab][p].forEach(c=>{s[tab][p][c.name]=0;});
+    }
+  }
+  return s;
+}
+// saveState is defined below with Gist sync
+
+let state=loadState();
+let curTab='sumire',curPeriod='week',curReview='sumire';
+let dispInterval=null;
+const now=new Date();
+let reviewYear=now.getFullYear(),reviewMonth=now.getMonth()+1;
+
+function getElapsed(){
+  if(!state.running)return 0;
+  return Math.floor((Date.now()-state.running.startMs)/1000);
+}
+
+function fmtM(m){const h=Math.floor(m/60),mm=m%60;return h>0?`${h}h ${String(mm).padStart(2,'0')}m`:`${mm}m`;}
+function fmtS(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
+
+function gauge(done,goal,segMin,pal){
+  const C=pal==='l'?LC:PC;
+  const over=done>goal;
+  const maxD=over?done:goal;
+  if(!segMin){
+    const np=Math.min(Math.round(done/maxD*100),100);
+    const op=over?Math.round((done-goal)/maxD*100):0;
+    return`<div class="gauge-outer"><div style="position:absolute;top:0;left:0;height:100%;display:flex;width:100%"><div style="width:${np}%;height:100%;background:${C[2]};flex-shrink:0"></div><div style="width:${op}%;height:100%;background:#c0392b;flex-shrink:0"></div></div></div>`;
+  }
+  const ns=Math.ceil(goal/segMin);
+  let rem=Math.min(done,goal);
+  let html='<div class="gauge-outer"><div style="position:absolute;top:0;left:0;height:100%;display:flex;width:100%">';
+  for(let i=0;i<ns;i++){
+    const sg=Math.min(segMin,goal-i*segMin);
+    const sd=Math.max(0,Math.min(rem,sg));
+    rem-=sd;
+    const pp=Math.round(sd/sg*100);
+    const sw=Math.round(sg/goal*100);
+    html+=`<div style="width:${sw}%;height:100%;background:#e8e0f0;flex-shrink:0;position:relative;${i>0?'border-left:2px solid #faf8f5':''}"><div style="width:${pp}%;height:100%;background:${C[Math.min(i,C.length-1)]}"></div></div>`;
+  }
+  if(over){const op=Math.round((done-goal)/maxD*100);html+=`<div style="width:${op}%;height:100%;background:#c0392b;flex-shrink:0"></div>`;}
+  html+='</div></div>';
+  return html;
+}
+
+function setDate(){
+  const n=new Date(),d=['日','月','火','水','木','金','土'];
+  document.getElementById('date-lbl').textContent=`${n.getFullYear()}年${n.getMonth()+1}月${n.getDate()}日（${d[n.getDay()]}）`;
+}
+
+function getDone(tab,period,name){
+  const base=state[tab][period][name]||0;
+  if(state.running&&state.running.tab===tab&&state.running.period===period&&state.running.name===name){
+    return base+Math.floor(getElapsed()/60);
+  }
+  return base;
+}
+
+function render(){
+  const cats=DEFS[curTab][curPeriod];
+  const tg=DEFS[curTab].tg[curPeriod];
+  const hint=DEFS[curTab].hint[curPeriod];
+  let td=0;
+  document.getElementById('cats').innerHTML=cats.map((c,i)=>{
+    const done=getDone(curTab,curPeriod,c.name);
+    td+=done;
+    const over=done>c.goal;
+    const isR=state.running&&state.running.tab===curTab&&state.running.period===curPeriod&&state.running.name===c.name;
+    return`<div class="cat-block">
+      <div class="cat-head"><span class="cat-name">${c.name}</span><span class="cat-time">${fmtM(done)} / ${fmtM(c.goal)}</span></div>
+      ${gauge(done,c.goal,c.segs,c.pal)}
+      <div class="cat-footer">
+        <span class="cat-remain${over?' over':''}">${over?'超過 '+fmtM(done-c.goal):'残り '+fmtM(c.goal-done)}</span>
+        ${curPeriod==='week'?`<button class="btn-start${isR?' running':''}" onclick="toggleTimer('${c.name}',${i})">${isR?'■ 停止':'▶ スタート'}</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('total-time').textContent=`${fmtM(td)} / ${fmtM(tg)}`;
+  document.getElementById('total-hint').textContent=hint;
+}
+
+function startDispInterval(){
+  if(dispInterval)clearInterval(dispInterval);
+  dispInterval=setInterval(()=>{
+    if(!state.running)return;
+    const el=getElapsed();
+    document.getElementById('timer-disp').textContent=fmtS(el);
+    if(el===3600)playAlarm();
+    if(el%60===0&&el>0)render();
+  },1000);
+}
+
+function toggleTimer(name,idx){
+  const isR=state.running&&state.running.tab===curTab&&state.running.period===curPeriod&&state.running.name===name;
+  if(isR){
+    const el=getElapsed();
+    state[curTab][curPeriod][name]=(state[curTab][curPeriod][name]||0)+Math.floor(el/60);
+    state.running=null;
+    saveState();
+    document.getElementById('timer-disp').textContent='00:00:00';
+    document.getElementById('timer-lbl').textContent='カテゴリを選んでスタート';
+  } else {
+    if(state.running){
+      const el=getElapsed();
+      state[state.running.tab][state.running.period][state.running.name]=(state[state.running.tab][state.running.period][state.running.name]||0)+Math.floor(el/60);
+    }
+    state.running={tab:curTab,period:curPeriod,name,startMs:Date.now()};
+    saveState();
+    document.getElementById('timer-lbl').textContent=name+' を計測中';
+    startDispInterval();
+  }
+  render();
+}
+
+function switchMain(tab,btn){
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(tab==='review'){
+    document.getElementById('panel-timer').style.display='none';
+    document.getElementById('panel-review').style.display='block';
+    renderReview();return;
+  }
+  document.getElementById('panel-timer').style.display='block';
+  document.getElementById('panel-review').style.display='none';
+  curTab=tab;render();
+}
+
+function switchPeriod(p,btn){
+  curPeriod=p;
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');render();
+}
+
+function switchReview(name,btn){
+  curReview=name;
+  document.querySelectorAll('.rntab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderReview();
+}
+
+function reviewKey(tab,y,m){return`rv_${tab}_${y}_${String(m).padStart(2,'0')}`;}
+
+function changeReviewMonth(dir){
+  reviewMonth+=dir;
+  if(reviewMonth>12){reviewMonth=1;reviewYear++;}
+  if(reviewMonth<1){reviewMonth=12;reviewYear--;}
+  renderReview();
+}
+
+function saveSalary(){
+  const salary=parseInt(document.getElementById('salary-input').value)||0;
+  const key=reviewKey(curReview,reviewYear,reviewMonth);
+  const saved=JSON.parse(localStorage.getItem(key)||'{}');
+  saved.salary=salary;
+  const isNow=(reviewYear===now.getFullYear()&&reviewMonth===now.getMonth()+1);
+  if(isNow){
+    saved.totalMins=DEFS[curReview].month.reduce((a,c)=>a+getDone(curReview,'month',c.name),0);
+  }
+  localStorage.setItem(key,JSON.stringify(saved));
+  document.getElementById('save-ok').textContent='✓ 保存しました';
+  setTimeout(()=>{document.getElementById('save-ok').textContent='';},2000);
+  calcHourly();
+}
+
+function calcHourly(){
+  const key=reviewKey(curReview,reviewYear,reviewMonth);
+  const saved=JSON.parse(localStorage.getItem(key)||'{}');
+  const salary=saved.salary||0;
+  document.getElementById('salary-input').value=salary||'';
+  const isNow=(reviewYear===now.getFullYear()&&reviewMonth===now.getMonth()+1);
+  const totalMins=isNow?DEFS[curReview].month.reduce((a,c)=>a+getDone(curReview,'month',c.name),0):(saved.totalMins||0);
+  const totalH=Math.round(totalMins/60*10)/10;
+  if(salary>0&&totalH>0){
+    const hw=Math.round(salary/totalH);
+    document.getElementById('hourly-val').textContent=`¥${hw.toLocaleString()}`;
+    document.getElementById('hourly-sub').textContent=`¥${salary.toLocaleString()} ÷ ${totalH}h`;
+  } else {
+    document.getElementById('hourly-val').textContent='—';
+    document.getElementById('hourly-sub').textContent=totalH>0?`${totalH}h記録済・売上を入力して保存`:'売上を入力して保存してください';
+  }
+}
+
+function renderReview(){
+  document.getElementById('mnav-label').textContent=`${reviewYear}年${reviewMonth}月`;
+  calcHourly();
+  const isNow=(reviewYear===now.getFullYear()&&reviewMonth===now.getMonth()+1);
+  const cats=DEFS[curReview].month;
+  let totalMins;
+  if(isNow){totalMins=cats.reduce((a,c)=>a+getDone(curReview,'month',c.name),0);}
+  else{const saved=JSON.parse(localStorage.getItem(reviewKey(curReview,reviewYear,reviewMonth))||'{}');totalMins=saved.totalMins||0;}
+  const totalH=Math.round(totalMins/60*10)/10;
+  const goal=DEFS[curReview].tg.month/60;
+  document.getElementById('avg-grid').innerHTML=
+    `<div class="avg-card"><div class="avg-lbl">${reviewYear}年${reviewMonth}月 作業時間</div><div class="avg-val-row"><span class="avg-val">${totalH}h</span><span class="avg-goal">目標 ${goal}h</span></div></div>`+
+    cats.map(c=>{
+      const m=isNow?getDone(curReview,'month',c.name):(JSON.parse(localStorage.getItem(reviewKey(curReview,reviewYear,reviewMonth))||'{}').cats||{})[c.name]||0;
+      return`<div class="avg-card"><div class="avg-lbl">${c.name}</div><div class="avg-val-row"><span class="avg-val">${Math.round(m/60*10)/10}h</span></div></div>`;
+    }).join('');
+  const months=[],hours=[];
+  for(let i=11;i>=0;i--){
+    let y=now.getFullYear(),mo=now.getMonth()+1-i;
+    while(mo<1){mo+=12;y--;}
+    while(mo>12){mo-=12;y++;}
+    const label=i===0?'今月':`${mo}月`;
+    months.push(label);
+    const isC=(y===now.getFullYear()&&mo===now.getMonth()+1);
+    const h=isC?Math.round(DEFS[curReview].month.reduce((a,c)=>a+getDone(curReview,'month',c.name),0)/60*10)/10
+      :(JSON.parse(localStorage.getItem(reviewKey(curReview,y,mo))||'{}').totalMins||0)/60;
+    hours.push(Math.round(h*10)/10);
+  }
+  const max=Math.max(...hours,goal,1);
+  const valid=hours.filter(h=>h>0);
+  const avg=valid.length?Math.round(valid.reduce((a,b)=>a+b,0)/valid.length*10)/10:0;
+  const ap=Math.round(avg/max*92);
+  document.getElementById('bar-chart').innerHTML=
+    `<div class="avg-line" style="bottom:${ap}%"><span class="avg-line-lbl">平均 ${avg}h</span></div>`+
+    months.map((m,i)=>{
+      const h=hours[i],p=h?Math.round(h/max*92):0,isCur=m==='今月';
+      return`<div class="bar-wrap"><div class="bar${isCur?' cur':''}" style="height:${p}%">${h?`<span class="bar-val">${h}h</span>`:''}<span class="bar-lbl">${m}</span></div></div>`;
+    }).join('');
+}
+
+function exportData(){
+  const data={state,reviews:{}};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith('rv_'))data.reviews[k]=JSON.parse(localStorage.getItem(k));
+  }
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  const d=new Date();
+  a.download=`timer_backup_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.json`;
+  a.click();URL.revokeObjectURL(a.href);
+}
+
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(data.state){state=data.state;saveState();}
+      if(data.reviews){Object.entries(data.reviews).forEach(([k,v])=>localStorage.setItem(k,JSON.stringify(v)));}
+      alert('インポートしました');render();
+    }catch(err){alert('ファイルの形式が正しくありません');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+const ALARM_SRC='./ORBIT_FX_Mow.wav';
+function playAlarm(){
+  const vol=parseFloat(document.getElementById('vol-slider').value);
+  const audio=new Audio(ALARM_SRC);
+  audio.volume=vol;
+  audio.play().catch(e=>console.log('Audio error:',e));
+}
+document.getElementById('vol-slider').addEventListener('input',function(){
+  document.getElementById('vol-val').textContent=Math.round(this.value*100)+'%';
+});
+
+// === Gist Sync ===
+let GIST_TOKEN = localStorage.getItem('gist_token')||'';
+const GIST_ID = 'ecc631192073225c3d74bc0e35702b0f';
+
+async function loadFromGist(){
+  GIST_TOKEN=localStorage.getItem('gist_token')||'';
+  if(!GIST_TOKEN||!GIST_ID)return;
+  try{
+    const res=await fetch(`https://api.github.com/gists/${GIST_ID}`,{
+      headers:{'Authorization':'token '+GIST_TOKEN,'Accept':'application/vnd.github.v3+json'}
+    });
+    const data=await res.json();
+    const content=data.files['timer_data.json']?.content;
+    if(content){
+      const remote=JSON.parse(content);
+      state=remote;
+      localStorage.setItem(SKEY,JSON.stringify(state));
+    }
+  }catch(e){console.log('Gist load error:',e);}
+}
+
+async function saveToGist(){
+  GIST_TOKEN=localStorage.getItem('gist_token')||'';
+  if(!GIST_TOKEN||!GIST_ID)return;
+  try{
+    await fetch(`https://api.github.com/gists/${GIST_ID}`,{
+      method:'PATCH',
+      headers:{'Authorization':'token '+GIST_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify({files:{'timer_data.json':{content:JSON.stringify(state)}}})
+    });
+  }catch(e){console.log('Gist save error:',e);}
+}
+
+function saveState(){
+  localStorage.setItem(SKEY,JSON.stringify(state));
+  saveToGist();
+}
+
+function saveToken(){
+  const t=document.getElementById('token-input').value.trim();
+  if(t){
+    localStorage.setItem('gist_token',t);
+    document.getElementById('token-status').textContent='✓ トークンを保存しました';
+    setTimeout(()=>{document.getElementById('token-status').textContent='';},2000);
+  }
+}
+
+async function initApp(){
+  await loadFromGist();
+  if(state.running){
+    document.getElementById('timer-lbl').textContent=state.running.name+' を計測中';
+    startDispInterval();
+  }
+  setDate();render();
+}
+
+initApp();
+</script>
+</body>
+</html>
