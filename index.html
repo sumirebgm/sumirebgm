@@ -74,71 +74,11 @@ body { font-family:'Shippori Mincho','Hiragino Mincho ProN',serif; background:va
 .share-wrap { text-align:center; margin-top:32px; }
 .btn-share { display:inline-flex; align-items:center; gap:8px; padding:11px 32px; border:1px solid #1d9bf0; background:#1d9bf0; color:#fff; font-family:'Shippori Mincho',serif; font-size:13px; letter-spacing:.16em; cursor:pointer; text-decoration:none; transition:background .2s; }
 .btn-share:hover { background:#0d8ae0; border-color:#0d8ae0; }
+.admin-link-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:72px; }
+.admin-link { font-family:'Cormorant Garamond',serif; font-size:8px; letter-spacing:.18em; color:var(--cream); cursor:pointer; text-decoration:none; display:block; padding:2px; }
 .x-link { display:flex; align-items:center; justify-content:center; width:32px; height:32px; color:var(--lav); transition:color .15s; text-decoration:none; }
 .x-link:hover { color:var(--purple); }
 
-/* removed LOGIN */
-.form-group { margin-bottom:16px; text-align:left; }
-.form-label { display:block; font-size:11px; letter-spacing:.2em; color:var(--muted); margin-bottom:8px; text-transform:uppercase; }
-.form-input { width:100%; padding:10px 14px; border:1px solid var(--pale); background:var(--white); font-family:'Shippori Mincho',serif; font-size:14px; color:var(--ink); outline:none; transition:border-color .15s; }
-.form-input:focus { border-color:var(--mid); }
-.back-link { display:block; margin-top:24px; font-size:12px; color:var(--muted); cursor:pointer; letter-spacing:.1em; background:none; border:none; font-family:inherit; }
-.back-link:hover { color:var(--purple); }
-
-/* removed ADMIN */
-.tab-panel { display:none; }
-.tab-panel.active { display:block; }
-.song-list { display:flex; flex-direction:column; gap:10px; }
-.song-row { display:grid; grid-template-columns:56px 1fr 1fr auto; gap:16px; align-items:center; background:var(--white); border:.5px solid var(--pale); padding:12px 16px; transition:border-color .15s; }
-.song-row:hover { border-color:var(--lav); }
-.song-row-thumb { width:44px; height:44px; background:#f0eaf8; display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--lav); flex-shrink:0; overflow:hidden; }
-.song-row-thumb img { width:44px; height:44px; object-fit:cover; display:block; }
-.song-row-name { font-size:13px; font-weight:600; color:var(--ink); line-height:1.4; }
-.song-row-url { font-size:11px; color:var(--muted); margin-top:2px; word-break:break-all; }
-.song-row-tags { display:flex; flex-wrap:wrap; gap:4px; }
-.song-row-tag { font-size:10px; padding:2px 6px; border:.5px solid var(--pale); color:var(--muted); }
-.song-row-actions { display:flex; gap:6px; flex-shrink:0; }
-.btn-edit,.btn-del { padding:5px 12px; border:1px solid var(--pale); background:var(--white); font-family:'Shippori Mincho',serif; font-size:11px; cursor:pointer; transition:all .15s; color:var(--muted); }
-.btn-edit:hover { border-color:var(--mid); color:var(--purple); }
-.btn-del:hover { border-color:var(--danger); color:var(--danger); }
-.btn-add { padding:9px 22px; border:1px solid var(--mid); background:var(--mid); color:var(--white); font-family:'Shippori Mincho',serif; font-size:13px; letter-spacing:.1em; cursor:pointer; transition:background .2s; }
-.btn-add:hover { background:var(--purple); border-color:var(--purple); }
-.btn-logout { padding:8px 18px; border:1px solid var(--pale); background:var(--white); color:var(--muted); font-family:'Shippori Mincho',serif; font-size:12px; letter-spacing:.1em; cursor:pointer; transition:all .15s; }
-.btn-logout:hover { border-color:var(--lav); color:var(--purple); }
-.btn-export { padding:9px 22px; border:1px solid var(--purple); background:var(--white); color:var(--purple); font-family:'Shippori Mincho',serif; font-size:13px; letter-spacing:.1em; cursor:pointer; transition:all .2s; }
-.btn-export:hover { background:var(--purple); color:var(--white); }
-.export-note { font-size:11px; color:var(--muted); letter-spacing:.06em; line-height:1.8; margin-top:12px; padding:12px 16px; background:var(--white); border:.5px solid var(--pale); }
-
-/* Modal */
-.modal-bg { display:none; position:fixed; inset:0; background:rgba(45,31,61,.4); z-index:100; align-items:center; justify-content:center; padding:24px; }
-.modal-bg.open { display:flex; }
-.modal { background:var(--white); width:100%; max-width:560px; max-height:90vh; overflow-y:auto; padding:36px 32px; }
-.modal-title { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:300; color:var(--ink); letter-spacing:.1em; margin-bottom:28px; }
-.modal-actions { display:flex; gap:10px; margin-top:28px; justify-content:flex-end; }
-.btn-save { padding:10px 28px; border:1px solid var(--mid); background:var(--mid); color:var(--white); font-family:'Shippori Mincho',serif; font-size:13px; letter-spacing:.12em; cursor:pointer; transition:background .2s; }
-.btn-save:hover { background:var(--purple); border-color:var(--purple); }
-.btn-cancel { padding:10px 28px; border:1px solid var(--pale); background:var(--white); color:var(--muted); font-family:'Shippori Mincho',serif; font-size:13px; letter-spacing:.12em; cursor:pointer; transition:all .15s; }
-.btn-cancel:hover { border-color:var(--lav); color:var(--purple); }
-.modal-tags { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:8px; }
-.modal-tag { padding:5px 14px; border:1px solid var(--pale); background:var(--white); color:var(--muted); font-family:'Shippori Mincho',serif; font-size:12px; cursor:pointer; transition:all .15s; }
-.modal-tag:hover { border-color:var(--lav); color:var(--purple); }
-.modal-tag.sel { border-color:var(--purple); background:#f0eaf8; color:var(--purple); font-weight:600; }
-.section-head { font-size:11px; letter-spacing:.2em; color:var(--muted); margin:20px 0 10px; text-transform:uppercase; }
-
-/* Tag manager */
-.tag-manager-cat { margin-bottom:28px; }
-.tag-manager-head { font-size:12px; font-weight:600; color:var(--ink); letter-spacing:.16em; margin-bottom:12px; display:flex; align-items:center; gap:10px; }
-.tag-manager-head::after { content:''; flex:1; height:.5px; background:var(--pale); }
-.tag-manager-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
-.mgr-tag { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border:1px solid var(--mid); background:var(--white); color:var(--purple); font-family:'Shippori Mincho',serif; font-size:12px; }
-.mgr-tag-del { width:14px; height:14px; background:none; border:none; color:var(--lav); cursor:pointer; font-size:12px; line-height:1; padding:0; display:flex; align-items:center; }
-.mgr-tag-del:hover { color:var(--danger); }
-.tag-add-row { display:flex; gap:8px; }
-.tag-add-input { flex:1; padding:7px 12px; border:1px solid var(--pale); font-family:'Shippori Mincho',serif; font-size:13px; color:var(--ink); outline:none; }
-.tag-add-input:focus { border-color:var(--mid); }
-.btn-tag-add { padding:7px 16px; border:1px solid var(--mid); background:var(--white); color:var(--purple); font-family:'Shippori Mincho',serif; font-size:12px; cursor:pointer; transition:all .15s; }
-.btn-tag-add:hover { background:var(--mid); color:var(--white); }
-.empty-state { text-align:center; padding:48px; color:var(--muted); font-size:13px; line-height:2; letter-spacing:.08em; }
 </style>
 </head>
 <body>
@@ -186,41 +126,14 @@ body { font-family:'Shippori Mincho','Hiragino Mincho ProN',serif; background:va
 </div>
 </div>
 
-<!-- LOGIN -->
 
 
-<!-- ADMIN -->
 
 
-<!-- MODAL -->
-<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-title" id="modal-title">曲を追加</div>
-    <div class="form-group">
-      <label class="form-label">曲名</label>
-      <input class="form-input" id="m-name" type="text" placeholder="例：雨の日の喫茶店">
-    </div>
-    <div class="form-group">
-      <label class="form-label">BOOTHのURL</label>
-      <input class="form-input" id="m-url" type="url" placeholder="https://sumirebgm.booth.pm/items/...">
-    </div>
-    <div class="form-group">
-      <label class="form-label">サムネイル画像URL</label>
-      <input class="form-input" id="m-img" type="url" placeholder="imgbbにアップしたURLを貼ってください">
-    </div>
-    <div class="section-head">タグを選択（複数可）</div>
-    <div class="section-head" style="margin-top:4px;font-size:10px;color:var(--lav)">雰囲気</div>
-    <div class="modal-tags" id="modal-tags-mood"></div>
-    <div class="section-head" style="font-size:10px;color:var(--lav)">シーン</div>
-    <div class="modal-tags" id="modal-tags-scene"></div>
-    <div class="section-head" style="font-size:10px;color:var(--lav)">音・楽器</div>
-    <div class="modal-tags" id="modal-tags-sound"></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
-      <button class="btn-save" onclick="saveSong()">保存する</button>
-    </div>
-  </div>
-</div>
+
+
+
+
 
 <script>
 const DEFAULT_TAGS = {"mood":["チル","かわいい","おしゃれ","まったり","ゆるい","エモい","元気","切ない","クール","しっとり","怪しい","和風"],"scene":["作業配信","朝配信","雑談","おやすみ","配信OP","配信ED","イベント","雨"],"sound":["ピアノ","エレピ","リコーダー","オルゴール","鉄琴","木琴","アコギ","ウクレレ","ぴこぴこ","猫"]};
@@ -246,6 +159,7 @@ function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
+// ===== LOGIN =====
 // ===== DIAGNOSIS =====
 let selectedTags = new Set();
 
@@ -316,7 +230,10 @@ function diagnose() {
 
     const shareWrap = document.getElementById('share-wrap');
     const shareBtn  = document.getElementById('share-btn');
-    const tweet = `🎵 すみれのBGM診断やってみた\n「${scored[0].name}」がおすすめでした☁️\n\n#すみれのBGM診断`;
+    const tweet = `🎵 すみれのBGM診断やってみた
+「${scored[0].name}」がおすすめでした☁️
+
+#すみれのBGM診断`;
     shareBtn.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent('https://sumirebgm.github.io/sumirebgm')}`;
     shareWrap.style.display = 'block';
   }
@@ -331,120 +248,6 @@ function diagnose() {
       value: scored.length
     });
   }
-}
-
-// ===== ADMIN =====
-function switchTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('
-function renderSongList() {
-  const list  = document.getElementById('song-list');
-  const empty = document.getElementById('song-empty');
-  if (workSongs.length === 0) {
-    list.innerHTML = '';
-    empty.style.display = 'block';
-  } else {
-    empty.style.display = 'none';
-    list.innerHTML = workSongs.map((s,i) => `
-      <div class="song-row">
-        <div class="song-row-thumb">${s.img?`<img src="${esc(s.img)}" alt="" onerror="this.outerHTML='♪'">` :'♪'}</div>
-        <div><div class="song-row-name">${esc(s.name)}</div><div class="song-row-url">${esc(s.url)}</div></div>
-        <div class="song-row-tags">${(s.tags||[]).map(t=>`<span class="song-row-tag">${esc(t)}</span>`).join('')}</div>
-        <div class="song-row-actions">
-          <button class="btn-edit" onclick="openModal(${i})">編集</button>
-          <button class="btn-del" onclick="deleteSong(${i})">削除</button>
-        </div>
-      </div>
-    `).join('');
-  }
-}
-
-function renderTagManager() {
-  const wrap = document.getElementById('tag-manager');
-  const catNames = { mood:'雰囲気', scene:'シーン', sound:'音・楽器' };
-  wrap.innerHTML = Object.entries(catNames).map(([cat,name]) => `
-    <div class="tag-manager-cat">
-      <div class="tag-manager-head">${name}</div>
-      <div class="tag-manager-tags">
-        ${(workTags[cat]||[]).map((t,i)=>`
-          <span class="mgr-tag">${esc(t)}
-            <button class="mgr-tag-del" onclick="deleteTag('${cat}',${i})">✕</button>
-          </span>`).join('')}
-      </div>
-      <div class="tag-add-row">
-        <input class="tag-add-input" id="tag-input-${cat}" type="text" placeholder="タグを追加" onkeydown="if(event.key==='Enter')addTag('${cat}')">
-        <button class="btn-tag-add" onclick="addTag('${cat}')">追加</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function addTag(cat) {
-  const inp = document.getElementById('tag-input-' + cat);
-  const val = inp.value.trim();
-  if (!val) return;
-  if (!workTags[cat].includes(val)) workTags[cat].push(val);
-  inp.value = '';
-  renderTagManager();
-}
-
-function deleteTag(cat, i) {
-  if (!confirm('このタグを削除しますか？')) return;
-  workTags[cat].splice(i, 1);
-  renderTagManager();
-}
-
-// ===== MODAL =====
-let editIndex = -1;
-
-function openModal(idx) {
-  editIndex = (idx !== undefined) ? idx : -1;
-  const song = editIndex >= 0 ? workSongs[editIndex] : null;
-  document.getElementById('modal-title').textContent = song ? '曲を編集' : '曲を追加';
-  document.getElementById('m-name').value = song ? song.name : '';
-  document.getElementById('m-url').value  = song ? song.url  : '';
-  document.getElementById('m-img').value  = song ? (song.img||'') : '';
-  const selTags = song ? (song.tags||[]) : [];
-  ['mood','scene','sound'].forEach(cat => {
-    document.getElementById('modal-tags-'+cat).innerHTML =
-      (workTags[cat]||[]).map(t =>
-        `<button class="modal-tag${selTags.includes(t)?' sel':''}" onclick="this.classList.toggle('sel')">${esc(t)}</button>`
-      ).join('');
-  });
-  document.getElementById('modal-bg').classList.add('open');
-}
-
-function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
-
-function saveSong() {
-  const name = document.getElementById('m-name').value.trim();
-  const url  = document.getElementById('m-url').value.trim();
-  const img  = document.getElementById('m-img').value.trim();
-  if (!name || !url) { alert('曲名とBOOTH URLは必須です'); return; }
-  const tags = [];
-  document.querySelectorAll('.modal-tag.sel').forEach(b => tags.push(b.textContent));
-  const entry = { name, url, img, tags };
-  if (editIndex >= 0) workSongs[editIndex] = entry;
-  else workSongs.push(entry);
-  closeModal();
-  renderSongList();
-}
-
-function deleteSong(i) {
-  if (!confirm('この曲を削除しますか？')) return;
-  workSongs.splice(i, 1);
-  renderSongList();
-}
-
-// ===== EXPORT =====
-function exportJSON() {
-  const data = { songs: workSongs, tags: workTags };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'songs.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
 }
 
 // ===== UTIL =====
